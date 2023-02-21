@@ -26,7 +26,7 @@ const Login = (req, res) => {
     request.stream = true
 
     const q =
-      'SELECT A.PTNTINFO_DATE, A.PTNTINFO_IDNO, A.PTNTINFO_NAME, A.PTNTINFO_BITH, A.PTNTINFO_SEX, A.PTNTINFO_AGE, A.PTNTINFO_VIPF,A.PTNTINFO_PKNM, C.PKFGNAME, C.ZONE, C.BSTP FROM dbo.HCAV_PTNTINFO AS A LEFT OUTER JOIN dbo.HCAV_BSNS AS B ON A.PTNTINFO_IDNO = B.BSNS_IDNO AND A.PTNTINFO_DATE = B.BSNS_KEYD LEFT OUTER JOIN dbo.HCAV_PKFG AS C ON A.PTNTINFO_PKFG = C.PKFG WHERE A.PTNTINFO_DATE = convert(varchar(8), getdate(), 112)  AND B.BSNS_IDNO IS NULL'
+      "SELECT account_id, account_pass, account_name FROM hcav_account WHERE account_auth = '3'"
     request.query(q, (err, recordset) => {
       if (err) {
         return console.log('query error :', err)
@@ -45,7 +45,7 @@ const Login = (req, res) => {
         // 마지막에 실행되는 부분
         res.json({
           code: 'OK',
-          message: '명지병원 태블릿 백엔드 연결 테스트',
+          message: '명지병원 태블릿 로그인 연결 테스트',
           data: result,
         })
       })

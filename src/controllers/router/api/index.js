@@ -1,7 +1,7 @@
 import express from 'express'
 
-import { testController } from '../../controllers/testController'
-import { LoginController } from '../../controllers/LoginController'
+import { testController } from '../../testController'
+import { LoginController } from '../../LoginController'
 
 const api = express.Router()
 

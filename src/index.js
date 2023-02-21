@@ -5,7 +5,7 @@ import cors from 'cors'
 
 import { logger, stream } from './utills'
 import { cfgServer } from './config'
-import router from './router'
+import router from './controllers/router'
 
 global.log = logger
 
