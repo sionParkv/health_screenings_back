@@ -1,6 +1,6 @@
 import mssql from 'mssql'
 
-const testtest = (req, res) => {
+const Visit = (req, res) => {
   var config = {
     user: 'nss',
     password: 'nss2109',
@@ -51,7 +51,7 @@ const testtest = (req, res) => {
       })
   })
 }
-const testController = {
-  testtest,
+const VisitController = {
+  Visit,
 }
-export { testController }
+export { VisitController }
