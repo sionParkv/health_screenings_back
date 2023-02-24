@@ -19,7 +19,12 @@ const Patient = (req, res) => {
   }
   mssql.connect(config, function (err) {
     if (err) {
-      return log.error(`ERROR : ${err}`)
+      res.json({
+        code: 'FAIL',
+        message: '검사현황조회 데이터베이스 오류',
+        error: err.message,
+      })
+      return log.error(`[PatientController] connect ERROR : ${err.message}`)
     }
     log.debug(`MSSQL 연결 완료`)
     var request = new mssql.Request()
@@ -29,25 +34,42 @@ const Patient = (req, res) => {
       'SELECT a.PTNTINFO_IDNO, a.PTNTINFO_NAME, a.PTNTINFO_SEX, a.PTNTINFO_AGE, A.PTNTINFO_BITH,a.PTNTINFO_VIPF, a.PTNTINFO_PKNM, B.PKFGNAME AS PTNTINFO_PKFG, A.PTNTINFO_CKFG FROM HCAV_PTNTINFO a, HCAV_PKFG B WHERE a.ptntinfo_date = convert(varchar, getdate(), 112) AND A.PTNTINFO_PKFG = B.PKFG      '
     request.query(q, (err, recordset) => {
       if (err) {
-        return console.log('query error :', err)
+        res.json({
+          code: 'FAIL',
+          message: '검사현황 조회 데이터베이스 오류',
+          error: err.message,
+        })
+        return log.error(`[PatientController] query error : ${err.message}`)
       }
     })
 
     var result = []
     request
       .on('error', function (err) {
-        console.log(err)
+        res.json({
+          code: 'FAIL',
+          message: '검사현황 조회 중 오류가 발생 하였습니다.',
+          error: err.message,
+        })
+        log.error(`검사현황 중 오류가 발생 하였습니다. : ${err.message}`)
       })
       .on('row', (row) => {
         result.push(row)
       })
       .on('done', () => {
-        // 마지막에 실행되는 부분
-        res.json({
-          code: 'OK',
-          message: '명지병원 태블릿 백엔드 연결 테스트',
-          data: result,
-        })
+        log.debug('검사현황 조회 성공 %o', result)
+        if (result?.length !== 0) {
+          res.json({
+            code: 'OK',
+            message: '검사결과 조회에 성공 하였습니다.',
+            data: result,
+          })
+        } else {
+          res.json({
+            code: 'FAIL',
+            message: '검사결과 데이터가 없습니다.',
+          })
+        }
       })
   })
 }
@@ -72,7 +94,12 @@ const PatientClick = (req, res) => {
   }
   mssql.connect(config, function (err) {
     if (err) {
-      return log.error(`ERROR : ${err}`)
+      res.json({
+        code: 'FAIL',
+        message: '검사현황조회 데이터베이스 오류',
+        error: err.message,
+      })
+      return log.error(`[PatientController] connect ERROR : ${err.message}`)
     }
     log.debug(`MSSQL 연결 완료`)
     var request = new mssql.Request()
@@ -105,28 +132,44 @@ const PatientClick = (req, res) => {
       AND ae.PTNTINFO_DATE = convert(varchar, getdate(), 112)`
     request.query(q, (err, recordset) => {
       if (err) {
-        return console.log('query error :', err)
+        res.json({
+          code: 'FAIL',
+          message: '검사현황 조회 중 오류가 발생 하였습니다.',
+          error: err.message,
+        })
+        return log.error(`[PatientController] query error : ${err.message}`)
       }
     })
 
     var result = []
     request
       .on('error', function (err) {
+        res.json({
+          code: 'FAIL',
+          message: '검사현황 조회 중 오류가 발생 하였습니다.',
+          error: err.message,
+        })
         log.error(
-          `[PatientController] 검사현황 조회 중 오류가 발생하였습니다. : ${err}`
+          `[PatientController] 검사현황 조회 중 오류가 발생하였습니다. : ${err.message}`
         )
       })
       .on('row', (row) => {
         result.push(row)
       })
       .on('done', () => {
-        // 마지막에 실행되는 부분
-        res.json({
-          code: 'OK',
-          message: '명지병원 태블릿 검사현황 클릭 이벤트 테스트',
-          data: result,
-        })
         log.debug('종합건강진단 검사현황 조회 성공 %o', result)
+        if (result?.length !== 0) {
+          res.json({
+            code: 'OK',
+            message: '검사현황 조회에 성공 하였습니다.',
+            data: result,
+          })
+        } else {
+          res.json({
+            code: 'FAIL',
+            message: '검사현황 데이터가 없습니다.',
+          })
+        }
       })
   })
 }
