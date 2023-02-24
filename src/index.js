@@ -20,6 +20,9 @@ app.use('/', router)
 app.get('/', (req, res) => {
   res.send('명지병원 건강검진 태블릿 RELAY')
 })
+app.get('*', (req, res) => {
+  res.send('명지병원 건강검진 태블릿 RELAY')
+})
 
 const server = http.createServer(app)
 server.listen(port)
