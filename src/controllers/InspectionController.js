@@ -19,7 +19,12 @@ const Inspection = (req, res) => {
   }
   mssql.connect(config, function (err) {
     if (err) {
-      return log.error(`ERROR : ${err}`)
+      res.json({
+        code: 'FAIL',
+        message: '수진자조회 데이터베이스 연결 오류',
+        error: err.message,
+      })
+      return log.error(`[InspectionController] connect ERROR : ${err.message}`)
     }
     log.debug(`MSSQL 연결 완료`)
     var request = new mssql.Request()
@@ -49,25 +54,41 @@ const Inspection = (req, res) => {
 
     request.query(q, (err, recordset) => {
       if (err) {
-        return console.log('query error :', err)
+        res.json({
+          code: 'FAIL',
+          message: '수진자 조회중 오류가 발생하였습니다.',
+          error: err.message,
+        })
+        return log.error(`[InspectionController] query error : ${err.message}`)
       }
     })
 
     var result = []
     request
       .on('error', function (err) {
-        console.log(err)
+        res.json({
+          code: 'FAIL',
+          message: '수진자 조회중 오류가 발생하였습니다.',
+          error: err.message,
+        })
+        log.debug(`InspectionController] query ERROR "${err.message}`)
       })
       .on('row', (row) => {
         result.push(row)
       })
       .on('done', () => {
-        // 마지막에 실행되는 부분
-        res.json({
-          code: 'OK',
-          message: '명지병원 태블릿 수진자조회 연결 테스트',
-          data: result,
-        })
+        if (result?.length !== 0) {
+          res.json({
+            code: 'OK',
+            message: '수진자조회에 성공하였습니다.',
+            data: result,
+          })
+        } else {
+          res.json({
+            code: 'FAIL',
+            message: '수진자 조회 데이터가 없습니다.',
+          })
+        }
       })
   })
 }
@@ -92,7 +113,14 @@ const InspectionClick = (req, res) => {
   }
   mssql.connect(config, function (err) {
     if (err) {
-      return log.error(`ERROR : ${err}`)
+      res.json({
+        code: 'FAIL',
+        message: '수진자조회 데이터베이스 연결 오류',
+        error: err.message,
+      })
+      return log.error(
+        `[InspectionController] 수진자 조회 중 오류가 발생하였습니다. : ${err.message}`
+      )
     }
     log.debug(`MSSQL 연결 완료`)
     var request = new mssql.Request()
@@ -117,28 +145,46 @@ const InspectionClick = (req, res) => {
     ORDER BY case a.PTNTEXAM_STAT WHEN 'I' THEN 1 WHEN 'W' THEN 2 WHEN 'N' THEN 3 WHEN 'D' THEN 4 WHEN 'F' THEN 5 END,case a.PTNTEXAM_RMCD when 'Z2016' then 1 else 2 end, b.PTNTINFO_NAME ASC`
     request.query(q, (err, recordset) => {
       if (err) {
-        return console.log('query error :', err)
+        res.json({
+          code: 'FAIL',
+          message: '수진자조회 데이터베이스 쿼리 오류',
+          error: err.message,
+        })
+        return console.log(
+          `[InspectionController] query error : ${err.message}`
+        )
       }
     })
 
     var result = []
     request
       .on('error', function (err) {
+        res.json({
+          code: 'FAIL',
+          message: '수진자 조회 중 오류가 발생하였습니다.',
+          error: err.message,
+        })
         log.error(
-          `[InspectionController] 검사현황 조회 중 오류가 발생하였습니다. : ${err}`
+          `[InspectionController] 수진자 조회 중 오류가 발생하였습니다. : ${err.message}`
         )
       })
       .on('row', (row) => {
         result.push(row)
       })
       .on('done', () => {
-        // 마지막에 실행되는 부분
-        res.json({
-          code: 'OK',
-          message: '명지병원 태블릿 수진자조회 클릭 이벤트 테스트',
-          data: result,
-        })
         log.debug('종합건강진단 수진자 조회 성공 %o', result)
+        if (result?.length !== 0) {
+          res.json({
+            code: 'OK',
+            message: '수진자조회 조회에 성공하였습니다.',
+            data: result,
+          })
+        } else {
+          res.json({
+            code: 'FAIL',
+            message: '수진자조회 데이터가 없습니다.',
+          })
+        }
       })
   })
 }
