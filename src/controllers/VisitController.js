@@ -1,6 +1,34 @@
 import mssql from 'mssql'
+import OracleDB from 'oracledb'
+
+import { cfgOracle } from '../config/oracle.config'
 
 const Visit = (req, res) => {
+  // 오라클 DB
+  const optionOutFormat = {
+    outFormat: oracledb.OUT_FORMAT_OBJECT,
+    resultSet: true,
+  }
+  oracledb.autoCommit = true
+
+  log.debug(`Oracle connectString: %o`, cfgOracle.cs)
+  oracledb.getConnection(
+    {
+      connectString: cfgOracle.cs,
+      password: cfgOracle.password,
+      user: cfgOracle.user,
+    },
+    (error, connection) => {
+      if (error) {
+        log.error('[oracle.connect] error: %o', error)
+        reject(error)
+      }
+
+      log.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ', connection)
+    }
+  )
+
+  // ns DB
   var config = {
     user: 'nss',
     password: 'nss2109',
@@ -17,6 +45,7 @@ const Visit = (req, res) => {
       trustServerCertificate: true,
     },
   }
+
   mssql.connect(config, function (err) {
     if (err) {
       res.json({
@@ -73,7 +102,7 @@ const Visit = (req, res) => {
       })
   })
 }
-const VisitController = {
-  Visit,
-}
+
+const VisitController = { Visit }
+
 export { VisitController }
