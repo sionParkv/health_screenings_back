@@ -47,13 +47,13 @@ server.on('listening', () => {
   log.debug(`${port}로 서버가 실행중입니다.`)
 })
 
-try {
-  const platform = process.platform.toString().trim()
-  const lib =
-    platform === 'darwin' ? 'src/lib/oracle_mac' : 'src/lib/oracle_win'
-  const libDir = __dirname.replace('src', lib)
-  oracledb.initOracleClient({ libDir })
-  log.info(`${tag} Oracle client library initialized!`)
-} catch (error) {
-  log.error(`${tag} Oracle client library error: %o`, error?.message || error)
-}
+// try {
+//   const platform = process.platform.toString().trim()
+//   const lib =
+//     platform === 'darwin' ? 'src/lib/oracle_mac' : 'src/lib/oracle_win'
+//   const libDir = __dirname.replace('src', lib)
+//   oracledb.initOracleClient({ libDir })
+//   log.info(`${tag} Oracle client library initialized!`)
+// } catch (error) {
+//   log.error(`${tag} Oracle client library error: %o`, error?.message || error)
+// }
