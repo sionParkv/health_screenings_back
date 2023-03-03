@@ -31,7 +31,7 @@ const Login = (req, res) => {
     var request = new mssql.Request()
     request.stream = true
 
-    const q = `SELECT account_id, account_pass, account_name FROM hcav_account WHERE ACCOUNT_AUTH = '3' and account_id='${account_id}' and account_pass='${account_pass}'`
+    const q = `SELECT account_id, account_pass, account_name FROM hcav_account WHERE account_id='${account_id}' and account_pass='${account_pass}'`
     request.query(q, (err, recordset) => {
       if (err) {
         res.json({
