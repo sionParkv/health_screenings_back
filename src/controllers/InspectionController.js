@@ -4,7 +4,7 @@ const Inspection = (req, res) => {
   var config = {
     user: 'nss',
     password: 'nss2109',
-    server: '192.168.1.98',
+    server: '192.168.1.100',
     database: 'HealthCheck_MJH',
     steram: true,
     pool: {
@@ -93,12 +93,68 @@ const Inspection = (req, res) => {
   })
 }
 
+const InspectionChange = async (req, res) => {
+  const { RMCD, IDNO, STAT, RMNUM, USERID } = req.body
+  var config = {
+    user: 'nss',
+    password: 'nss2109',
+    server: '192.168.1.100',
+    database: 'HealthCheck_MJH',
+    steram: true,
+    pool: {
+      max: 10,
+      min: 0,
+      idleTimeoutMillis: 30000,
+    },
+    options: {
+      encrypt: true,
+      trustServerCertificate: true,
+    },
+  }
+  mssql.connect(config, async (err) => {
+    if (err) {
+      log.error(`[InspectionController] connect ERROR : ${err.message}`)
+      res.json({
+        code: 'FAIL',
+        message: '수진자조회 데이터베이스 연결 오류',
+        error: err.message,
+      })
+      return
+    }
+
+    const rslt = await new mssql.Request()
+      .input('PTNT_RMCD', `${RMCD}`)
+      .input('PTNT_IDNO', `${IDNO}`)
+      .input('PTNT_STAT', `${STAT}`)
+      .input('PTNT_RMNUM', `${RMNUM}`)
+      .input('USER_ID', `${USERID}`)
+      .output('PTNT_RSLT')
+      .output('PTNT_MESG')
+      .execute('SP_AH_HCAV_PTNT_RESERVE')
+      .then((result) => {
+        console.debug(
+          `[InspectionController] procedure result : %o`,
+          result.recordsets[0][0]
+        )
+        res.json({
+          code: 'OK',
+          result: result.recordsets[0][0].PTNT_RSLT || '',
+          message: result.recordsets[0][0].PTNT_MESG || '',
+        })
+      })
+      .catch((err) => {
+        console.error(`[InspectionController] procedure ERROR : %o`, err)
+        res.json({ code: 'ERROR', error: err.message || '' })
+      })
+  })
+}
+
 const InspectionClick = (req, res) => {
   const { room } = req.body
   var config = {
     user: 'nss',
     password: 'nss2109',
-    server: '192.168.1.98',
+    server: '192.168.1.100',
     database: 'HealthCheck_MJH',
     steram: true,
     pool: {
@@ -131,18 +187,19 @@ const InspectionClick = (req, res) => {
     a.PTNTEXAM_WTTM, a.PTNTEXAM_STEP, b.PTNTINFO_BITH,
     b.PTNTINFO_SEX, b.PTNTINFO_AGE, b.PTNTINFO_PKNM, b.PTNTINFO_VIPF, b.PTNTINFO_IDNO, b.PTNTINFO_NAME, b.PTNTINFO_PKFG,
     row_number() OVER (ORDER BY case a.PTNTEXAM_STAT WHEN 'W' THEN 1 ELSE 2 END,ISNULL(a.PTNTEXAM_TGTM, GETDATE()) ASC) AS row
-    FROM hcav_ptntexam a,hcav_ptntinfo b, HCAV_EXAMRMINFO D
-    WHERE a.PTNTEXAM_IDNO = b.PTNTINFO_IDNO
-    AND b.ptntinfo_date=convert(varchar, getdate(), 112)
-    AND a.PTNTEXAM_RMCD='${room}' 
-    AND (a.PTNTEXAM_RMNUM ='2' OR a.PTNTEXAM_RMNUM IS NULL)
-    AND a.ptntexam_date=convert(varchar, getdate(), 112)
+ FROM hcav_ptntexam a,hcav_ptntinfo b, HCAV_EXAMRMINFO D
+WHERE a.PTNTEXAM_IDNO = b.PTNTINFO_IDNO
+  AND b.ptntinfo_date=convert(varchar, getdate(), 112)
+   AND a.PTNTEXAM_RMCD='${room}' 
+  AND (a.PTNTEXAM_RMNUM ='22' OR a.PTNTEXAM_RMNUM IS NULL)
+  AND a.ptntexam_date=convert(varchar, getdate(), 112)
+  
+  AND D.EXAMRMINFO_RMCD = A.PTNTEXAM_RMCD
+GROUP by a.PTNTEXAM_DATE,a.PTNTEXAM_IDNO, a.PTNTEXAM_RMCD, a.PTNTEXAM_RMNM, a.PTNTEXAM_RMNUM, a.PTNTEXAM_STAT,a.PTNTEXAM_STTM,a.PTNTEXAM_EDTM,
+a.PTNTEXAM_WTTM, a.PTNTEXAM_STEP, b.PTNTINFO_BITH,  b.PTNTINFO_SEX, b.PTNTINFO_AGE, b.PTNTINFO_PKNM, b.PTNTINFO_VIPF, b.PTNTINFO_IDNO, b.PTNTINFO_NAME, b.PTNTINFO_PKFG,a.PTNTEXAM_TGTM
 
-    AND D.EXAMRMINFO_RMCD = A.PTNTEXAM_RMCD
-    GROUP by a.PTNTEXAM_DATE,a.PTNTEXAM_IDNO, a.PTNTEXAM_RMCD, a.PTNTEXAM_RMNM, a.PTNTEXAM_RMNUM, a.PTNTEXAM_STAT,a.PTNTEXAM_STTM,a.PTNTEXAM_EDTM,
-    a.PTNTEXAM_WTTM, a.PTNTEXAM_STEP, b.PTNTINFO_BITH,  b.PTNTINFO_SEX, b.PTNTINFO_AGE, b.PTNTINFO_PKNM, b.PTNTINFO_VIPF, b.PTNTINFO_IDNO, b.PTNTINFO_NAME, b.PTNTINFO_PKFG,a.PTNTEXAM_TGTM
-
-    ORDER BY case a.PTNTEXAM_STAT WHEN 'I' THEN 1 WHEN 'W' THEN 2 WHEN 'N' THEN 3 WHEN 'D' THEN 4 WHEN 'F' THEN 5 END,case a.PTNTEXAM_RMCD when 'Z2016' then 1 else 2 end, b.PTNTINFO_NAME ASC`
+   ORDER BY case a.PTNTEXAM_STAT WHEN 'I' THEN 1 WHEN 'W' THEN 2 WHEN 'N' THEN 3 WHEN 'D' THEN 4 WHEN 'F' THEN 5 END,case a.PTNTEXAM_RMCD when 'Z2016' then 1 else 2 end, b.PTNTINFO_NAME ASC
+`
     request.query(q, (err, recordset) => {
       if (err) {
         res.json({
@@ -191,6 +248,7 @@ const InspectionClick = (req, res) => {
 
 const InspectionController = {
   Inspection,
+  InspectionChange,
   InspectionClick,
 }
 export { InspectionController }

@@ -5,7 +5,7 @@ const Login = (req, res) => {
   var config = {
     user: 'nss',
     password: 'nss2109',
-    server: '192.168.1.98',
+    server: '192.168.1.100',
     database: 'HealthCheck_MJH',
     steram: true,
     pool: {
