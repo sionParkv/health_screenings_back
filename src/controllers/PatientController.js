@@ -4,7 +4,7 @@ const Patient = (req, res) => {
   var config = {
     user: 'nss',
     password: 'nss2109',
-    server: '192.168.1.100',
+    server: '192.168.1.98',
     database: 'HealthCheck_MJH',
     steram: true,
     pool: {
@@ -79,7 +79,7 @@ const PatientChange = async (req, res) => {
   var config = {
     user: 'nss',
     password: 'nss2109',
-    server: '192.168.1.100',
+    server: '192.168.1.98',
     database: 'HealthCheck_MJH',
     steram: true,
     pool: {
@@ -135,7 +135,7 @@ const PatientClick = (req, res) => {
   var config = {
     user: 'nss',
     password: 'nss2109',
-    server: '192.168.1.100',
+    server: '192.168.1.98',
     database: 'HealthCheck_MJH',
     steram: true,
     pool: {

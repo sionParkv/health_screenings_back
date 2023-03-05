@@ -1,5 +1,6 @@
 import { LoginController } from './LoginController'
 import { VisitController } from './VisitController'
+import { VisitTicket } from './VisitTicket'
 import { PatientController } from './PatientController'
 import { InspectionController } from './InspectionController'
 import { InspectionClickController } from './InspectionController'

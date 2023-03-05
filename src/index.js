@@ -45,15 +45,15 @@ server.on('error', (error) => {
 
 server.on('listening', () => {
   log.debug(`${port}로 서버가 실행중입니다.`)
-})
 
-// try {
-//   const platform = process.platform.toString().trim()
-//   const lib =
-//     platform === 'darwin' ? 'src/lib/oracle_mac' : 'src/lib/oracle_win'
-//   const libDir = __dirname.replace('src', lib)
-//   oracledb.initOracleClient({ libDir })
-//   log.info(`${tag} Oracle client library initialized!`)
-// } catch (error) {
-//   log.error(`${tag} Oracle client library error: %o`, error?.message || error)
-// }
+  try {
+    oracledb.initOracleClient({
+      libDir: 'C://app//orcale//instantclient_19_18',
+    })
+    console.log('오라클 DB 연결 성공')
+  } catch (err) {
+    console.error('오라클 DB 연결 실패')
+    console.error(err)
+    process.exit(1)
+  }
+})
