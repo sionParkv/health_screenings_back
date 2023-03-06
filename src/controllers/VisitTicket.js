@@ -1,7 +1,8 @@
 import mssql from 'mssql'
 
 const VisitTickets = async (req, res) => {
-  const { RMCD, IDNO, STAT, RMNUM, USERID } = req.body
+  const { NAME, IDNO, ISID, ZONE, BSTP, NUMB, GB, TEMP } = req.body
+
   var config = {
     user: 'nss',
     password: 'nss2109',
