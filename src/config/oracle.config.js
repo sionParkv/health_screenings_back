@@ -1,6 +1,6 @@
 const ora = {
   host: '192.168.10.53',
-  password: 'MJH_MJHRFID#$',
+  password: 'MJH_MJHRFID!@#',
   port: '1521',
   server: '192.168.10.53',
   serviceName: 'MJOCS',
