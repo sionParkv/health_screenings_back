@@ -36,7 +36,7 @@ const Visit = (req, res) => {
                       FROM MJH_RFID.PMSSUVIEW_GONG
                       WHERE pmssfdate = ${moment().format('YYYYMMDD')}`
 
-      let result = await connection.query(query, [], optionOutFormat)
+      let result = await connection.execute(query, [], optionOutFormat)
       log.log('[oracle.query] result: %o', result)
 
       if (result.rows) {
