@@ -28,16 +28,18 @@ const Visit = (req, res) => {
       }
 
       // 오라클DB 연결 성공
-      const query = `SELECT pmssptcno, pmssptnam, pmssbirdt, pmssftime, '종합' as GUBUN
-                      FROM MJH_RFID.PMSSUVIEW_JONG
-                      WHERE pmssfdate = ${moment().format('YYYYMMDD')}
-                      union all
-                      SELECT pmssptcno, pmssptnam, pmssbirdt, pmssftime, '일반' as GUBUN
-                      FROM MJH_RFID.PMSSUVIEW_GONG
-                      WHERE pmssfdate = ${moment().format('YYYYMMDD')}`
-
+      const query = `SELECT PMSSPTCNO, PMSSPTNAM, PMSSBIRDT, PMSSFTIME , '종합' as GUBUN
+                                      FROM MJH_RFID.PMSSUVIEW_JONG 
+                                      WHERE PMSSFDATE ='${moment().format("YYYYMMDD")}'
+union all                                                                          
+SELECT PMSSPTCNO, PMSSPTNAM, PMSSBIRDT, PMSSFTIME , '일반' as GUBUN
+                                      FROM MJH_RFID.PMSSUVIEW_GONG
+                                       WHERE PMSSFDATE ='${moment().format("YYYYMMDD")}'`
+      console.log(query)
       let result = await connection.execute(query, [], optionOutFormat)
-      log.log('[oracle.query] result: %o', result)
+      log.info('[oracle.query] result: %o', result)
+      log.info('[oracle.query] result: %o', result.resultSet)
+      log.info('[oracle.query] result: %o', result.rows)
 
       if (result.rows) {
         result = result.rows
