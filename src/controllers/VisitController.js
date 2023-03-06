@@ -1,11 +1,11 @@
 import mssql from 'mssql'
 import oracledb from 'oracledb'
+import moment from 'moment'
 
 import { cfgOracle } from '../config/oracle.config'
 
 const Visit = (req, res) => {
   // 오라클 DB
-
   const optionOutFormat = {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
     resultSet: true,
@@ -28,17 +28,14 @@ const Visit = (req, res) => {
       }
 
       // 오라클DB 연결 성공
-      const query = `SELECT PMSSPTCNO, PMSSPTNAM, PMSSBIRDT, PMSSFTIME
-      FROM MJH_RFID.PMSSUVIEW_JONG
-      WHERE PMSSFDATE = :PMSSFDATE
-       AND PMSSPTCNO = :PMSSPTCNO
+      const query = `SELECT pmssptcno, pmssptnam, pmssbirdt, pmssftime, '종합' as GUBUN
+                      FROM MJH_RFID.PMSSUVIEW_JONG
+                      WHERE pmssfdate = ${moment().format('YYYYMMDD')}
+                      union all
+                      SELECT pmssptcno, pmssptnam, pmssbirdt, pmssftime, '일반' as GUBUN
+                      FROM MJH_RFID.PMSSUVIEW_GONG
+                      WHERE pmssfdate = ${moment().format('YYYYMMDD')}`
 
-      uinon all
-
-      SELECT PMSSPTCNO, PMSSPTNAM, PMSSBIRDT, PMSSFTIME
-      FROM MJH_RFID.PMSSUVIEW_GONG
-       WHERE PMSSFDATE = :PMSSFDATE
-       AND PMSSPTCNO = :PMSSPTCNO`
       let result = await connection.query(query, [], optionOutFormat)
       log.log('[oracle.query] result: %o', result)
 

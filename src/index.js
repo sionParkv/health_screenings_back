@@ -48,7 +48,7 @@ server.on('listening', () => {
 
   try {
     oracledb.initOracleClient({
-      libDir: 'C://app//orcale//instantclient_19_18',
+      libDir: 'C:\\app\\orcale\\instantclient_19_18',
     })
     console.log('오라클 DB 연결 성공')
   } catch (err) {
