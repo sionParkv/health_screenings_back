@@ -2,11 +2,11 @@ import mssql from 'mssql'
 
 const VisitTickets = async (req, res) => {
   const { NAME, IDNO, ISID, ZONE, BSTP, NUMB, GB, TEMP } = req.body
-
+  console.log(req.body)
   var config = {
     user: 'nss',
     password: 'nss2109',
-    server: '192.168.1.100',
+    server: '192.168.1.98',
     database: 'HealthCheck_MJH',
     steram: true,
     pool: {
@@ -31,14 +31,14 @@ const VisitTickets = async (req, res) => {
     }
 
     const rslt = await new mssql.Request()
-      .input('BSNS_IDNO', `${IDNO}`)
-      .input('BSNS_NAME', `${NAME}`)
-      .input('BSNS_ISID', `${ISID}`)
-      .input('BSNS_ZONE', `${ZONE}`)
-      .input('BSNS_BSTP', `${BSTP}`)
-      .input('SUGI_NUMB', `${NUMB}`)
-      .input('ISSUE_GB', `${GB}`)
-      .input('BSNS_TEMP', `${TEMP}`)
+      .input('BSNS_IDNO', `"${IDNO}"`)
+      .input('BSNS_NAME', `"${NAME}"`)
+      .input('BSNS_ISID', `"${ISID}"`)
+      .input('BSNS_ZONE', `"${ZONE}"`)
+      .input('BSNS_BSTP', `${parseInt(BSTP)}`)
+      .input('SUGI_NUMB', `${parseInt(NUMB)}`)
+      .input('ISSUE_GB', `"${GB}"`)
+      .input('BSNS_TEMP', `"${TEMP}"`)
       .execute('P_Issue_1')
       .then((result) => {
         console.debug(
