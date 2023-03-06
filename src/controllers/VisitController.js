@@ -6,10 +6,7 @@ import { cfgOracle } from '../config/oracle.config'
 
 const Visit = (req, res) => {
   // 오라클 DB
-  const optionOutFormat = {
-    outFormat: oracledb.OUT_FORMAT_OBJECT,
-    resultSet: true,
-  }
+  const optionOutFormat = { outFormat: oracledb.OUT_FORMAT_OBJECT }
   oracledb.autoCommit = true
 
   log.debug(`Oracle connectString: %o`, cfgOracle.cs)
@@ -30,15 +27,17 @@ const Visit = (req, res) => {
       // 오라클DB 연결 성공
       const query = `SELECT PMSSPTCNO, PMSSPTNAM, PMSSBIRDT, PMSSFTIME , '종합' as GUBUN
                                       FROM MJH_RFID.PMSSUVIEW_JONG 
-                                      WHERE PMSSFDATE ='${moment().format("YYYYMMDD")}'
+                                      WHERE PMSSFDATE ='${moment().format(
+                                        'YYYYMMDD'
+                                      )}'
 union all                                                                          
 SELECT PMSSPTCNO, PMSSPTNAM, PMSSBIRDT, PMSSFTIME , '일반' as GUBUN
                                       FROM MJH_RFID.PMSSUVIEW_GONG
-                                       WHERE PMSSFDATE ='${moment().format("YYYYMMDD")}'`
+                                       WHERE PMSSFDATE ='${moment().format(
+                                         'YYYYMMDD'
+                                       )}'`
       console.log(query)
       let result = await connection.execute(query, [], optionOutFormat)
-      log.info('[oracle.query] result: %o', result)
-      log.info('[oracle.query] result: %o', result.resultSet)
       log.info('[oracle.query] result: %o', result.rows)
 
       if (result.rows) {
