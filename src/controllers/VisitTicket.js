@@ -1,8 +1,9 @@
+import moment from 'moment'
 import mssql from 'mssql'
 
 const VisitTickets = async (req, res) => {
   const { NAME, IDNO, ISID, ZONE, BSTP, NUMB, GB, TEMP } = req.body
-  console.log(req.body)
+  console.log('[VisitTicket.VisitTickets] request body: ', req.body)
   var config = {
     user: 'nss',
     password: 'nss2109',
@@ -30,21 +31,34 @@ const VisitTickets = async (req, res) => {
       return
     }
 
+    console.log('[VisitTickets] Procedure: ', 'P_Issue_1')
+    console.log('[VisitTickets] Parameters - BSNS_IDNO: ', `"${IDNO}"`)
+    console.log('[VisitTickets] Parameters - BSNS_NAME: ', `"${NAME}"`)
+    console.log('[VisitTickets] Parameters - BSNS_ISID: ', `"ISMC0001"`)
+    console.log('[VisitTickets] Parameters - BSNS_ZONE: ', `"200"`)
+    console.log('[VisitTickets] Parameters - BSNS_BSTP: ', `${parseInt(BSTP)}`)
+    console.log('[VisitTickets] Parameters - SUGI_NUMB: ', `500`)
+    console.log('[VisitTickets] Parameters - ISSUE_GB: ', `"A"`)
+    console.log(
+      '[VisitTickets] Parameters - BSNS_TEMP: ',
+      `"${moment().format('YYYYMMDD')}"`
+    )
     const rslt = await new mssql.Request()
       .input('BSNS_IDNO', `"${IDNO}"`)
       .input('BSNS_NAME', `"${NAME}"`)
-      .input('BSNS_ISID', `"${ISID}"`)
-      .input('BSNS_ZONE', `"${ZONE}"`)
+      .input('BSNS_ISID', `"ISMC0001"`)
+      .input('BSNS_ZONE', `200`)
       .input('BSNS_BSTP', `${parseInt(BSTP)}`)
-      .input('SUGI_NUMB', `${parseInt(NUMB)}`)
-      .input('ISSUE_GB', `"${GB}"`)
-      .input('BSNS_TEMP', `"${TEMP}"`)
+      .input('SUGI_NUMB', `500`)
+      .input('ISSUE_GB', `"A"`)
+      .input('BSNS_TEMP', `"${moment().format('YYYYMMDD')}"`)
       .execute('P_Issue_1')
       .then((result) => {
         console.debug(
-          `[VisitController] procedure result : %o`,
+          `[VisitController] procedure result recordsets : %o`,
           result.recordsets[0][0]
         )
+        console.debug(`[VisitController] procedure result : %o`, result)
         res.json({
           code: 'OK',
         })

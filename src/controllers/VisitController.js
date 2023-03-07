@@ -30,8 +30,8 @@ const Visit = (req, res) => {
                                       WHERE PMSSFDATE ='${moment().format(
                                         'YYYYMMDD'
                                       )}'
-union all                                                                          
-SELECT PMSSPTCNO, PMSSPTNAM, PMSSBIRDT, PMSSFTIME , '일반' as GUBUN
+                    union all                                                                          
+                    SELECT PMSSPTCNO, PMSSPTNAM, PMSSBIRDT, PMSSFTIME , '일반' as GUBUN
                                       FROM MJH_RFID.PMSSUVIEW_GONG
                                        WHERE PMSSFDATE ='${moment().format(
                                          'YYYYMMDD'
@@ -66,7 +66,7 @@ SELECT PMSSPTCNO, PMSSPTNAM, PMSSBIRDT, PMSSFTIME , '일반' as GUBUN
   // var config = {
   //   user: 'nss',
   //   password: 'nss2109',
-  //   server: '192.168.1.100',
+  //   server: '192.168.1.98',
   //   database: 'HealthCheck_MJH',
   //   steram: true,
   //   pool: {
