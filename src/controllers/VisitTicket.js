@@ -36,7 +36,7 @@ const VisitTickets = async (req, res) => {
     console.log('[VisitTickets] Parameters - BSNS_NAME: ', `"${NAME}"`)
     console.log('[VisitTickets] Parameters - BSNS_ISID: ', `"ISMC0001"`)
     console.log('[VisitTickets] Parameters - BSNS_ZONE: ', `"200"`)
-    console.log('[VisitTickets] Parameters - BSNS_BSTP: ', `${parseInt(BSTP)}`)
+    console.log('[VisitTickets] Parameters - BSNS_BSTP: ', `${BSTP}`)
     console.log('[VisitTickets] Parameters - SUGI_NUMB: ', `500`)
     console.log('[VisitTickets] Parameters - ISSUE_GB: ', `"A"`)
     console.log(
