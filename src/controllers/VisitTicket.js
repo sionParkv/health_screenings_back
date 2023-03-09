@@ -2,7 +2,7 @@ import moment from 'moment'
 import mssql from 'mssql'
 
 const VisitTickets = async (req, res) => {
-  const { NAME, IDNO, BSTP } = req.body
+  const { NAME, IDNO, BSTP, ZONE } = req.body
   console.log('[VisitTicket.VisitTickets] request body: ', req.body)
   var config = {
     user: 'nss',
@@ -35,7 +35,7 @@ const VisitTickets = async (req, res) => {
     console.log('[VisitTickets] Parameters - BSNS_IDNO: ', `"${IDNO}"`)
     console.log('[VisitTickets] Parameters - BSNS_NAME: ', `"${NAME}"`)
     console.log('[VisitTickets] Parameters - BSNS_ISID: ', `"ISMC0001"`)
-    console.log('[VisitTickets] Parameters - BSNS_ZONE: ', `"200"`)
+    console.log('[VisitTickets] Parameters - BSNS_ZONE: ', `"${ZONE}"`)
     console.log('[VisitTickets] Parameters - BSNS_BSTP: ', `${BSTP}`)
     console.log('[VisitTickets] Parameters - SUGI_NUMB: ', `500`)
     console.log('[VisitTickets] Parameters - ISSUE_GB: ', `"A"`)
