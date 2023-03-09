@@ -32,23 +32,23 @@ const VisitTickets = async (req, res) => {
     }
 
     console.log('[VisitTickets] Procedure: ', 'P_Issue_1')
-    console.log('[VisitTickets] Parameters - BSNS_IDNO: ', `"${IDNO}"`)
-    console.log('[VisitTickets] Parameters - BSNS_NAME: ', `"${NAME}"`)
-    console.log('[VisitTickets] Parameters - BSNS_ISID: ', `"ISMC0001"`)
-    console.log('[VisitTickets] Parameters - BSNS_ZONE: ', `"${ZONE}"`)
+    console.log('[VisitTickets] Parameters - BSNS_IDNO: ', `${IDNO}`)
+    console.log('[VisitTickets] Parameters - BSNS_NAME: ', `${NAME}`)
+    console.log('[VisitTickets] Parameters - BSNS_ISID: ', `ISMC0001`)
+    console.log('[VisitTickets] Parameters - BSNS_ZONE: ', `${ZONE}`)
     console.log('[VisitTickets] Parameters - BSNS_BSTP: ', BSTP)
     console.log('[VisitTickets] Parameters - SUGI_NUMB: ', 500)
-    console.log('[VisitTickets] Parameters - ISSUE_GB: ', `"A"`)
-    console.log('[VisitTickets] Parameters - BSNS_TEMP: ', `"${TEMP}"`)
+    console.log('[VisitTickets] Parameters - ISSUE_GB: ', `A`)
+    console.log('[VisitTickets] Parameters - BSNS_TEMP: ', `${TEMP}`)
     const rslt = await new mssql.Request()
-      .input('BSNS_IDNO', `"${IDNO}"`)
-      .input('BSNS_NAME', `"${NAME}"`)
-      .input('BSNS_ISID', `"ISMC0001"`)
-      .input('BSNS_ZONE', `"${ZONE}"`)
+      .input('BSNS_IDNO', `${IDNO}`)
+      .input('BSNS_NAME', `${NAME}`)
+      .input('BSNS_ISID', `ISMC0001`)
+      .input('BSNS_ZONE', `${ZONE}`)
       .input('BSNS_BSTP', BSTP)
       .input('SUGI_NUMB', 500)
-      .input('ISSUE_GB', `"A"`)
-      .input('BSNS_TEMP', `"${TEMP}"`)
+      .input('ISSUE_GB', `A`)
+      .input('BSNS_TEMP', `${TEMP}`)
       .execute('P_Issue_1')
       .then((result) => {
         console.debug(
@@ -58,6 +58,8 @@ const VisitTickets = async (req, res) => {
         console.debug(`[VisitController] procedure result : %o`, result)
         res.json({
           code: 'OK',
+          Wait_Count: recordsets.Wait_Count,
+          Issue_Count: recordsets.Issue_Count,
         })
       })
       .catch((err) => {
