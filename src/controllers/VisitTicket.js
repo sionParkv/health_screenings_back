@@ -58,8 +58,8 @@ const VisitTickets = async (req, res) => {
         console.debug(`[VisitController] procedure result : %o`, result)
         res.json({
           code: 'OK',
-          Wait_Count: recordsets.Wait_Count,
-          Issue_Count: recordsets.Issue_Count,
+          Wait_Count: recordsets[0][0]?.Wait_Count,
+          Issue_Count: recordsets[0][0]?.Issue_Count,
         })
       })
       .catch((err) => {
