@@ -47,7 +47,7 @@ const VisitTickets = async (req, res) => {
       .input('BSNS_IDNO', `"${IDNO}"`)
       .input('BSNS_NAME', `"${NAME}"`)
       .input('BSNS_ISID', `"ISMC0001"`)
-      .input('BSNS_ZONE', `200`)
+      .input('BSNS_ZONE', `${ZONE}`)
       .input('BSNS_BSTP', `${parseInt(BSTP)}`)
       .input('SUGI_NUMB', `500`)
       .input('ISSUE_GB', `"A"`)
