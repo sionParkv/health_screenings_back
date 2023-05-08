@@ -190,8 +190,7 @@ const InspectionClick = (req, res) => {
     FROM hcav_ptntexam a,hcav_ptntinfo b, HCAV_EXAMRMINFO D
     WHERE a.PTNTEXAM_IDNO = b.PTNTINFO_IDNO
     AND b.ptntinfo_date=convert(varchar, getdate(), 112)
-    AND a.PTNTEXAM_RMCD='${room}' 
-    AND (a.PTNTEXAM_RMNUM ='6' OR a.PTNTEXAM_RMNUM IS NULL)
+    AND a.PTNTEXAM_RMCD='${room}'
     AND a.ptntexam_date=convert(varchar, getdate(), 112)
     
     AND D.EXAMRMINFO_RMCD = A.PTNTEXAM_RMCD
