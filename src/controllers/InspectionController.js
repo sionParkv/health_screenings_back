@@ -130,7 +130,7 @@ const InspectionChange = async (req, res) => {
       .input('USER_ID', `${USERID}`)
       .output('PTNT_RSLT')
       .output('PTNT_MESG')
-      .execute('SP_AH_HCAV_PTNT_RESERVE')
+      .execute('SP_AH_HCAV_PTNT_RESERVE2')
       .then((result) => {
         console.debug(
           `[InspectionController] procedure result : %o`,
